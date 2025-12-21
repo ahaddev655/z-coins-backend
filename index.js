@@ -3,12 +3,14 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+import userTable from "./schemas/user_table.js";
 import db from "./config/db.js";
 
 // Load environment variables
 dotenv.config();
 
-// Database connection
+// Tables
+userTable();
 
 // Routes
 import authRoutes from "./routes/auth_routes.js";
