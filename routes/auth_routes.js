@@ -1,5 +1,6 @@
 import express from "express";
 import { register, login } from "../controllers/auth_controllers.js";
+import { uploadImage } from "../middleware/uploadImage.js";
 
 const router = express.Router();
 
