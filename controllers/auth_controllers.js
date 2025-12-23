@@ -10,7 +10,7 @@ export const register = async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Name, email and password are required",
+        error: "Name, email and password are required",
       });
     }
 
@@ -18,7 +18,7 @@ export const register = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "User already exists",
+        error: "User already exists",
       });
     }
 
@@ -64,7 +64,7 @@ export const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Email and password are required",
+        error: "Email and password are required",
       });
     }
 
@@ -72,14 +72,14 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "Invalid credentials",
+        error: "Invalid credentials",
       });
     }
 
     if (!user.isActive || user.isBlocked) {
       return res.status(403).json({
         success: false,
-        message: "Account is inactive or blocked",
+        error: "Account is inactive or blocked",
       });
     }
 
@@ -87,7 +87,7 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: "Invalid credentials",
+        error: "Invalid credentials",
       });
     }
 
