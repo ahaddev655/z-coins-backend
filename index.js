@@ -3,18 +3,16 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+
 import userTable from "./schemas/user_table.js";
 import db from "./config/db.js";
-import { handleUploadErrors } from "./middleware/uploadImage.js"; // Add this
+import authRoutes from "./routes/auth_routes.js";
+import { handleUploadErrors } from "./middleware/uploadImage.js"; // ✅ extension included
 
-// Load environment variables
 dotenv.config();
 
 // Initialize database tables
 userTable();
-
-// Routes
-import authRoutes from "./routes/auth_routes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -35,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use("/api/auth", authRoutes);
 
-// Upload error handling middleware (should be after routes that use upload)
+// Upload error handler (AFTER routes)
 app.use(handleUploadErrors);
 
 // Test route
@@ -54,7 +52,6 @@ io.on("connection", (socket) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
-
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });

@@ -1,31 +1,34 @@
 import multer from "multer";
 
-// Memory storage for file uploads
 const storage = multer.memoryStorage();
 
-// Create multer instance
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 },
+export const upload = multer({
+  storage,
+  limits: {
+    fileSize: 2 * 1024 * 1024, // 2MB
+  },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) {
-      cb(null, true);
-    } else {
+    if (!file.mimetype.startsWith("image/")) {
       cb(new Error("Only image files are allowed"), false);
     }
+    cb(null, true);
   },
 });
 
-// Export single file upload middleware
-export const uploadImage = upload.single("userImage");
-
-// Error handling middleware
 export const handleUploadErrors = (err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+
   if (err) {
     return res.status(400).json({
       success: false,
-      message: err.message || "File upload failed",
+      message: err.message,
     });
   }
+
   next();
 };
