@@ -10,7 +10,8 @@ const userTable = async () => {
       isActive BOOLEAN DEFAULT TRUE,
       isBlocked BOOLEAN DEFAULT FALSE,
       role VARCHAR(20) DEFAULT 'trader',
-      userImage VARCHAR(255),
+      userImage LONGBLOB,
+      imageMimeType VARCHAR(50),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;

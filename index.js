@@ -5,11 +5,12 @@ import http from "http";
 import { Server } from "socket.io";
 import userTable from "./schemas/user_table.js";
 import db from "./config/db.js";
+import { handleUploadErrors } from "./middleware/uploadImage.js"; // Add this
 
 // Load environment variables
 dotenv.config();
 
-// Tables
+// Initialize database tables
 userTable();
 
 // Routes
@@ -33,6 +34,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);
+
+// Upload error handling middleware (should be after routes that use upload)
+app.use(handleUploadErrors);
 
 // Test route
 app.get("/", (req, res) => {
