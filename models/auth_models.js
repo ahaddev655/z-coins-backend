@@ -7,13 +7,19 @@ export const findUserByEmail = async (email) => {
 };
 
 // Create new user
-export const createUser = async ({ name, email, password, userImage }) => {
+export const createUser = async ({
+  fullName,
+  email,
+  password,
+  userImage,
+  mobileNumber,
+}) => {
   const [result] = await db.query(
-    "INSERT INTO users (name, email, password, userImage) VALUES (?, ?, ?, ?)",
-    [name, email, password, userImage],
+    "INSERT INTO users (fullName, email, password, userImage, mobileNumber) VALUES (?, ?, ?, ?, ?)",
+    [fullName, email, password, userImage, mobileNumber]
   );
 
-  return { id: result.insertId, name, email };
+  return result;
 };
 
 // Find user by ID
