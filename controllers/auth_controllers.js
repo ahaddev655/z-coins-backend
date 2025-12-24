@@ -96,11 +96,11 @@ export const login = async (req, res) => {
       token,
       role: role[0]?.role,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
       success: false,
       error: "Login failed",
-      error,
+      err,
     });
   }
 };
