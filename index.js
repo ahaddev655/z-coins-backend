@@ -3,11 +3,10 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
-
 import userTable from "./schemas/user_table.js";
-import db from "./config/db.js";
 import authRoutes from "./routes/auth_routes.js";
-import { handleUploadErrors } from "./middleware/uploadImage.js"; // ✅ extension included
+import userRoutes from "./routes/user_routes.js";
+import { handleUploadErrors } from "./middleware/uploadImage.js";
 
 dotenv.config();
 
@@ -32,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 // Upload error handler (AFTER routes)
 app.use(handleUploadErrors);

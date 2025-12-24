@@ -21,9 +21,3 @@ export const createUser = async ({
 
   return result;
 };
-
-// Find user by ID
-export const findUserById = async (id) => {
-  const [rows] = await db.query("SELECT * FROM users WHERE id = ?", [id]);
-  return rows[0] || null;
-};

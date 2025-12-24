@@ -41,6 +41,7 @@ export const register = async (req, res) => {
       success: true,
       message: "User registered successfully",
       token,
+      id: newUser.id,
       role: role[0]?.role,
     });
   } catch (err) {
@@ -95,6 +96,7 @@ export const login = async (req, res) => {
       message: "Login successful",
       token,
       role: role[0]?.role || null,
+      id: user.id,
     });
   } catch (err) {
     res.status(500).json({
