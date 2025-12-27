@@ -1,4 +1,5 @@
 import express from "express";
+import { upload } from "./../middleware/uploadImage.js";
 import {
   getOneUser,
   deleteUser,
@@ -21,7 +22,7 @@ router.get("/all-users", findAllUsers);
 router.get("/one-user/:id", getOneUser);
 
 // Update user profile
-router.put("/edit-user/:id", editUser);
+router.put("/edit-user/:id", upload.single("userImage"), editUser);
 
 // Change password
 router.put("/change-password/:id", changePasswordUser);

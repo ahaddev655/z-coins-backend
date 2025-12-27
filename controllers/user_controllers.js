@@ -39,7 +39,8 @@ export const getOneUser = async (req, res) => {
     console.error("Get User Error:", err);
     res.status(500).json({
       success: false,
-      message: "User details fetching failed",
+      error: "User details fetching failed",
+      err,
     });
   }
 };
@@ -68,7 +69,8 @@ export const deleteUser = async (req, res) => {
     console.error("Delete User Error:", err);
     res.status(500).json({
       success: false,
-      message: "User deletion failed",
+      error: "User deletion failed",
+      err,
     });
   }
 };
@@ -81,17 +83,28 @@ export const editUser = async (req, res) => {
     const { id } = req.params;
     const { fullName, email, mobileNumber } = req.body;
 
+    const userImage = req.file ? req.file.buffer : null;
+
     const updatedUser = await updateUserById(id, {
       fullName,
       email,
       mobileNumber,
+      userImage,
     });
 
+    // Check if user exists first
     if (!updatedUser) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
+    }
+
+    // Convert image buffer to base64 if it exists
+    if (updatedUser.userImage) {
+      updatedUser.userImage = `data:image/jpeg;base64,${Buffer.from(
+        updatedUser.userImage
+      ).toString("base64")}`;
     }
 
     res.status(200).json({
@@ -103,10 +116,12 @@ export const editUser = async (req, res) => {
     console.error("Edit User Error:", err);
     res.status(500).json({
       success: false,
-      message: "User update failed",
+      error: "User update failed",
+      err,
     });
   }
 };
+
 
 /* =========================
    CHANGE PASSWORD
@@ -114,7 +129,7 @@ export const editUser = async (req, res) => {
 export const changePasswordUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { newPassword } = req.body;
+    const { password } = req.body;
 
     const user = await findUserById(id);
 
@@ -125,7 +140,7 @@ export const changePasswordUser = async (req, res) => {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     await updateUserPasswordById(id, hashedPassword);
 
     res.status(200).json({
@@ -136,7 +151,8 @@ export const changePasswordUser = async (req, res) => {
     console.error("Change Password Error:", err);
     res.status(500).json({
       success: false,
-      message: "Change password API failed",
+      error: "Change password API failed",
+      err
     });
   }
 };
@@ -165,7 +181,8 @@ export const blockUser = async (req, res) => {
     console.error("User block API Error:", err);
     res.status(500).json({
       success: false,
-      message: "User block failed",
+      error: "User block failed",
+      err,
     });
   }
 };
@@ -187,13 +204,14 @@ export const findAllUsers = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "All users fetched",
-      user
+      user,
     });
   } catch (err) {
     console.error("All users fetching API error:", err);
     res.status(500).json({
       success: false,
-      message: "Failed in fetching all users",
+      error: "Failed in fetching all users",
+      err,
     });
   }
 };

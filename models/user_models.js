@@ -35,13 +35,13 @@ export const deleteUserById = async (id) => {
    UPDATE USER PROFILE
 ========================= */
 export const updateUserById = async (id, data) => {
-  const { fullName, email, mobileNumber } = data;
+  const { fullName, email, mobileNumber, userImage } = data;
 
   const [result] = await db.query(
     `UPDATE users 
-     SET fullName = ?, email = ?, mobileNumber = ?
+     SET fullName = ?, email = ?, mobileNumber = ?, userImage = ?
      WHERE id = ?`,
-    [fullName, email, mobileNumber, id]
+    [fullName, email, mobileNumber, userImage, id]
   );
 
   if (result.affectedRows === 0) return null;
