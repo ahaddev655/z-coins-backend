@@ -37,11 +37,15 @@ export const register = async (req, res) => {
       email,
     ]);
 
+    const [id] = await db.query(`SELECT id FROM users WHERE email = ?`, [
+      email,
+    ]);
+
     res.status(201).json({
       success: true,
       message: "User registered successfully",
       token,
-      id: newUser.id,
+      id: id[0]?.id,
       role: role[0]?.role,
     });
   } catch (err) {
