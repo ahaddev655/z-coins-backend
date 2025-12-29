@@ -110,3 +110,27 @@ export const login = async (req, res) => {
     });
   }
 };
+
+/* ================= GOOGLE REGISTER ================= */
+export const googleRegister = async (req, res) => {
+  try {
+    const { fullName, email, userImage, mobileNumber } = req.body;
+
+    res.status(200).json({
+      success: true,
+      message: "Google data fetched successfully",
+      user: {
+        fullName: fullName || "",
+        email,
+        userImage: userImage || null,
+        mobileNumber: mobileNumber || "",
+      },
+    });
+  } catch (error) {
+    console.error("Google register error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch Google data",
+    });
+  }
+};
