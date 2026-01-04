@@ -50,12 +50,15 @@ export const register = async (req, res) => {
     const [role] = await db.query(`SELECT role FROM users WHERE email = ?`, [
       email,
     ]);
+    const [id] = await db.query(`SELECT id FROM users WHERE email = ?`, [
+      email,
+    ]);
 
     res.status(201).json({
       success: true,
       message: "User registered successfully",
       token,
-      id: newUser.id,
+      id: id[0]?.id,
       role: role[0]?.role,
     });
   } catch (err) {
@@ -63,6 +66,7 @@ export const register = async (req, res) => {
     res.status(500).json({
       success: false,
       error: "User registration failed",
+      err,
     });
   }
 };
@@ -139,6 +143,7 @@ export const googleRegister = async (req, res) => {
     res.status(500).json({
       success: false,
       error: "Failed to fetch Google data",
+      error,
     });
   }
 };
