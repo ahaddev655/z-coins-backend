@@ -47,8 +47,8 @@ export const register = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    const [[{ role }]] = await db.query(`SELECT role FROM users WHERE id = ?`, [
-      newUser.id,
+    const [role] = await db.query(`SELECT role FROM users WHERE email = ?`, [
+      email,
     ]);
 
     res.status(201).json({
@@ -56,7 +56,7 @@ export const register = async (req, res) => {
       message: "User registered successfully",
       token,
       id: newUser.id,
-      role,
+      role: role[0]?.role,
     });
   } catch (err) {
     console.error("Register error:", err);
@@ -66,7 +66,6 @@ export const register = async (req, res) => {
     });
   }
 };
-
 
 /* ================= LOGIN ================= */
 export const login = async (req, res) => {
