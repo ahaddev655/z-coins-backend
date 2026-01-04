@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import userTable from "./schemas/user_table.js";
 import authRoutes from "./routes/auth_routes.js";
 import userRoutes from "./routes/user_routes.js";
+import cryptoRoutes from "./routes/crypto_routes.js";
 import { handleUploadErrors } from "./middleware/uploadImage.js";
 
 dotenv.config();

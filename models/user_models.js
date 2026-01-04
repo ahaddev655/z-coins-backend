@@ -5,7 +5,7 @@ import db from "../config/db.js";
 ========================= */
 export const findUserById = async (id) => {
   const [rows] = await db.query(
-    "SELECT id, fullName, email, mobileNumber, password, userImage FROM users WHERE id = ?",
+    "SELECT id, fullName, email, password, userImage FROM users WHERE id = ?",
     [id]
   );
   return rows[0] || null;
@@ -16,7 +16,7 @@ export const findUserById = async (id) => {
 ========================= */
 export const findUsers = async (id) => {
   const [rows] = await db.query(
-    "SELECT id, fullName, email, mobileNumber, password, isBlocked, isActive, userImage FROM users",
+    "SELECT id, fullName, email, password, isBlocked, isActive, userImage FROM users",
     [id]
   );
   return rows[0] || null;
@@ -35,13 +35,13 @@ export const deleteUserById = async (id) => {
    UPDATE USER PROFILE
 ========================= */
 export const updateUserById = async (id, data) => {
-  const { fullName, email, mobileNumber, userImage } = data;
+  const { fullName, email, userImage } = data;
 
   const [result] = await db.query(
     `UPDATE users 
-     SET fullName = ?, email = ?, mobileNumber = ?, userImage = ?
+     SET fullName = ?, email = ?, userImage = ?
      WHERE id = ?`,
-    [fullName, email, mobileNumber, userImage, id]
+    [fullName, email, userImage, id]
   );
 
   if (result.affectedRows === 0) return null;

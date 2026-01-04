@@ -6,7 +6,7 @@ import db from "../config/db.js";
 /* ================= REGISTER ================= */
 export const register = async (req, res) => {
   try {
-    const { fullName, email, password, mobileNumber } = req.body;
+    const { fullName, email, password } = req.body;
 
     const existingUser = await findUserByEmail(email);
     if (existingUser) {
@@ -24,7 +24,6 @@ export const register = async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
-      mobileNumber,
       userImage,
     });
 
@@ -114,7 +113,7 @@ export const login = async (req, res) => {
 /* ================= GOOGLE REGISTER ================= */
 export const googleRegister = async (req, res) => {
   try {
-    const { fullName, email, userImage, mobileNumber } = req.body;
+    const { fullName, email, userImage } = req.body;
 
     res.status(200).json({
       success: true,
@@ -123,7 +122,6 @@ export const googleRegister = async (req, res) => {
         fullName: fullName || "",
         email,
         userImage: userImage || null,
-        mobileNumber: mobileNumber || "",
       },
     });
   } catch (error) {

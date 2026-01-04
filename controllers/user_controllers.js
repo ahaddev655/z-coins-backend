@@ -81,14 +81,13 @@ export const deleteUser = async (req, res) => {
 export const editUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { fullName, email, mobileNumber } = req.body;
+    const { fullName, email } = req.body;
 
     const userImage = req.file ? req.file.buffer : null;
 
     const updatedUser = await updateUserById(id, {
       fullName,
       email,
-      mobileNumber,
       userImage,
     });
 

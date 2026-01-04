@@ -12,11 +12,10 @@ export const createUser = async ({
   email,
   password,
   userImage,
-  mobileNumber,
 }) => {
   const [result] = await db.query(
-    "INSERT INTO users (fullName, email, password, userImage, mobileNumber) VALUES (?, ?, ?, ?, ?)",
-    [fullName, email, password, userImage, mobileNumber]
+    "INSERT INTO users (fullName, email, password, userImage) VALUES (?, ?, ?, ?)",
+    [fullName, email, password, userImage]
   );
 
   return result;
