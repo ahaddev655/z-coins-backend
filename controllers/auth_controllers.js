@@ -6,8 +6,9 @@ import db from "../config/db.js";
 /* ================= REGISTER ================= */
 export const register = async (req, res) => {
   try {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password, userImageUrl } = req.body;
 
+    // Check existing user
     const existingUser = await findUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({
@@ -18,8 +19,21 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const userImage = req.file ? req.file.buffer : null;
+    let userImage = null;
 
+    // 1️⃣ Manual image upload (multer)
+    if (req.file) {
+      userImage = req.file.buffer;
+    }
+
+    // 2️⃣ Google profile image (URL → buffer)
+    if (!req.file && userImageUrl) {
+      const response = await fetch(userImageUrl);
+      const arrayBuffer = await response.arrayBuffer();
+      userImage = Buffer.from(arrayBuffer);
+    }
+
+    // Create user
     const newUser = await createUser({
       fullName,
       email,
@@ -27,35 +41,32 @@ export const register = async (req, res) => {
       userImage,
     });
 
+    // JWT
     const token = jwt.sign(
       { id: newUser.id, email: newUser.email },
       process.env.JWT_SECRET
     );
 
-    const [role] = await db.query(`SELECT role FROM users WHERE email = ?`, [
-      email,
-    ]);
-
-    const [id] = await db.query(`SELECT id FROM users WHERE email = ?`, [
-      email,
+    const [[{ role }]] = await db.query(`SELECT role FROM users WHERE id = ?`, [
+      newUser.id,
     ]);
 
     res.status(201).json({
       success: true,
       message: "User registered successfully",
       token,
-      id: id[0]?.id,
-      role: role[0]?.role,
+      id: newUser.id,
+      role,
     });
   } catch (err) {
-    console.log(err);
+    console.error("Register error:", err);
     res.status(500).json({
       success: false,
       error: "User registration failed",
-      err,
     });
   }
 };
+
 
 /* ================= LOGIN ================= */
 export const login = async (req, res) => {
